@@ -15,12 +15,6 @@ export default function MainLayout() {
         {status === 'IN_PROGRESS' && <Spin spinning={true} fullscreen />}
         <Outlet></Outlet>
       </div>
-      <div
-        class="fb-comments"
-        data-href="https://cuutrodongvat-web.vercel.app"
-        data-width=""
-        data-numposts="5"
-      ></div>
       <Footer></Footer>
     </div>
   );
