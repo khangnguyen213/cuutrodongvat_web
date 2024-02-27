@@ -1,0 +1,200 @@
+.modal_backdrop {
+  // fixed overflow-auto h-[100vh] w-full z-[60] text-white bg-[#00000073] flex-center
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: auto;
+  height: 100vh;
+  width: 100%;
+  z-index: 110;
+  background: #00000073;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .form_pet {
+    position: relative;
+    padding: 20px 40px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    margin: auto;
+    transition-duration: 200ms;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transform: scale(0.9);
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+
+    @include phone-screen {
+      width: 100% !important;
+      padding: 20px !important;
+      transform: scale(1);
+    }
+
+    @media (max-width: 360px) {
+      width: 100% !important;
+      height: 100% !important;
+      margin: 0 !important;
+      margin-bottom: 40px;
+    }
+
+    .btn-close {
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      row-gap: 10px;
+      width: 100%;
+      max-width: 600px;
+
+      select {
+        width: fit-content;
+        padding: 10px 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 400;
+        color: #333;
+        outline: none;
+        cursor: pointer;
+
+        &::placeholder {
+          color: #999;
+        }
+
+        option {
+          color: #333;
+        }
+      }
+
+      input {
+        width: 100%;
+        padding: 10px 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 400;
+        color: #333;
+        outline: none;
+
+        &::placeholder {
+          color: #999;
+        }
+      }
+
+      input[type='file'] {
+        width: fit-content;
+        font-size: 16px;
+        color: #333;
+        outline: none;
+        cursor: pointer;
+        padding: 0;
+        border: none;
+
+        &::placeholder {
+          color: #999;
+        }
+
+        &::-webkit-file-upload-button {
+          padding: 10px 20px;
+          border: none;
+          border-radius: 8px;
+          font-size: 16px;
+          color: #fff;
+          background-color: $success;
+          cursor: pointer;
+          transition: all 0.3s;
+
+          &:hover {
+            background-color: $success-dark;
+          }
+        }
+      }
+
+      textarea {
+        width: 100%;
+        padding: 10px 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 400;
+        color: #333;
+        outline: none;
+        resize: none;
+
+        &::placeholder {
+          color: #999;
+        }
+      }
+
+      .form-row {
+        display: flex;
+        justify-content: flex-start;
+        column-gap: 20px;
+        width: 100%;
+
+        @include phone-screen {
+          flex-direction: column;
+          row-gap: 20px;
+        }
+      }
+
+      .input-group {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        column-gap: 20px;
+        width: 100%;
+
+        input[type='checkbox'] {
+          width: fit-content;
+          height: fit-content;
+          cursor: pointer;
+        }
+      }
+
+      .error-msg {
+        width: 100%;
+        font-size: 16px;
+        font-weight: 400;
+        color: $danger;
+      }
+
+      .error-msg::before {
+        content: '⚠️ ';
+      }
+
+      .btn-register {
+        width: 100%;
+        // padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+        background-color: $success;
+        cursor: pointer;
+        transition: all 0.3s;
+
+        &:hover {
+          background-color: $success-dark;
+        }
+      }
+    }
+  }
+}

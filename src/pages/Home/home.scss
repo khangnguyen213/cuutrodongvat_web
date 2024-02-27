@@ -1,0 +1,112 @@
+@import 'bootstrap/scss/bootstrap.scss';
+
+.home_page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .carousel_item {
+    width: 100%;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .about_us {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 24px $screen-x-gap-desktop;
+
+    .about_us_img {
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
+        width: 100%;
+      }
+    }
+
+    .about_us_content {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 24px;
+
+      h2 {
+        font-size: 14px;
+        font-weight: 600;
+        border-left: 2px solid $success;
+        color: $success;
+        padding: 0 8px;
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 37px;
+        font-weight: 600;
+        margin: 12px 0 30px 0;
+        color: $primary;
+      }
+
+      p {
+        font-size: 18px;
+        font-weight: 400;
+        margin-bottom: 24px;
+      }
+    }
+
+    @include phone-screen {
+      flex-direction: column;
+      padding: 24px $screen-x-gap-mobile;
+
+      .about_us_img {
+        width: 100%;
+      }
+
+      .about_us_content {
+        width: 100%;
+      }
+    }
+  }
+
+  .album {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #f7f7f7;
+    padding: 80px 0;
+    .album_item {
+      display: flex;
+      flex-direction: column;
+      width: 30%;
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      img {
+        width: 100%;
+      }
+      h1 {
+        text-align: center;
+        font-size: 18px;
+        font-weight: 900;
+      }
+    }
+
+    @include phone-screen {
+      flex-direction: column;
+      padding: 24px $screen-x-gap-mobile;
+      .album_item {
+        width: 100%;
+        margin-bottom: 24px;
+      }
+    }
+  }
+}

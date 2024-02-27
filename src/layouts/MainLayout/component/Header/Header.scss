@@ -1,0 +1,121 @@
+header {
+  width: 100%;
+  padding: 4px $screen-x-gap-desktop;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $secondary;
+
+  @include phone-screen {
+    padding: 4px $screen-x-gap-mobile;
+  }
+
+  img {
+    width: 44px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .desktop_nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 32px;
+    p {
+      color: $primary;
+      text-decoration: none;
+      font-size: 18px;
+      margin-bottom: 0;
+      font-weight: 400;
+      &:hover {
+        color: $success;
+        text-decoration: none;
+      }
+    }
+  }
+
+  .mobile_nav {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    p {
+      color: $primary;
+      text-decoration: none;
+      font-size: 18px;
+      margin-bottom: 0;
+      font-weight: 400;
+      &:hover {
+        color: $success;
+        text-decoration: none;
+      }
+    }
+  }
+
+  .ant-menu-light {
+    font-family: $font-name, cursive;
+    font-size: 18px;
+  }
+
+  .ant-menu-inline.ant-menu-root .ant-menu-submenu-title {
+    color: $success !important;
+  }
+
+  .ant-menu-light .ant-menu-item-selected {
+    color: $secondary !important;
+    background-color: $success !important;
+    border-radius: 4px !important;
+  }
+
+  .ant-menu-light.ant-menu-horizontal > .ant-menu-item-selected::after {
+    border-bottom-color: $success-light !important;
+  }
+
+  .ant-menu-light.ant-menu-horizontal > .ant-menu-item:hover::after {
+    border-bottom-color: $success-light !important;
+  }
+
+  .ant-menu-light .ant-menu-submenu-selected {
+    color: $secondary !important;
+    background-color: $success !important;
+    border-radius: 4px !important;
+  }
+
+  .ant-menu-light.ant-menu-horizontal > .ant-menu-subitem-selected::after {
+    border-bottom-color: $success-light !important;
+  }
+
+  .ant-menu-light.ant-menu-horizontal > .ant-menu-submenu:hover::after {
+    border-bottom-color: $success !important;
+  }
+
+  .ant-menu-light .ant-menu-submenu-selected > .ant-menu-submenu-title {
+    color: $secondary !important;
+  }
+
+  .ant-menu-light.ant-menu-horizontal > .ant-menu-submenu-selected::after {
+    border-bottom-color: $success-light !important;
+  }
+
+  .ant-menu.ant-menu-item-selected.ant-menu-item-only-child.ant-menu-item-active {
+    color: $secondary !important;
+    background-color: $success !important;
+  }
+
+  @include phone-screen {
+    img {
+      width: 32px;
+    }
+
+    .desktop_nav {
+      display: none;
+    }
+    .mobile_nav {
+      display: flex;
+    }
+  }
+}

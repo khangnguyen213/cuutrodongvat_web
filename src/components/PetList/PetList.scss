@@ -1,0 +1,178 @@
+@import 'bootstrap/scss/bootstrap.scss';
+
+.pet_list_container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .pet_list {
+    width: 100%;
+    padding: 80px $screen-x-gap-desktop;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+
+    .pet_list_item {
+      height: 524px;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+
+      span {
+        position: absolute;
+        top: 20px;
+        right: -45px;
+        display: block;
+        padding: 6px 50px 4px;
+        background-color: #f15642;
+        transform: rotate(40deg);
+        font-size: 18px;
+        color: #fff;
+        z-index: 20;
+      }
+
+      img {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        left: 0;
+        aspect-ratio: 1/1;
+        z-index: 10;
+        border-radius: 8px;
+      }
+
+      div {
+        background-color: $secondary;
+        position: absolute;
+        bottom: 6px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        padding: 24px 30px;
+        border-radius: 8px;
+        box-shadow: 0 3px 7px rgb(0 0 0 / 25%);
+        z-index: 20;
+        transition: all 0.3s;
+
+        h1 {
+          font-size: 26px;
+          color: $primary;
+          font-weight: 700;
+          border-bottom: 12px;
+        }
+
+        h2 {
+          font-size: 16px;
+          color: $success;
+        }
+
+        p {
+          font-size: 16px;
+          margin-bottom: 4px;
+        }
+
+        svg {
+          color: $success;
+          margin-right: 8px;
+        }
+
+        h3 {
+          color: red;
+          font-size: 16px;
+        }
+      }
+
+      &:hover {
+        div {
+          cursor: pointer;
+          box-shadow: 0 3px 7px rgb(0 0 0 / 75%);
+          transform: translateX(-50%) translateY(-2px);
+        }
+      }
+    }
+
+    .pet_list_item_first {
+      height: 524px;
+      width: 100%;
+      background-image: url('@assets/find.jpg');
+      background-size: cover;
+      position: relative;
+      border-radius: 8px;
+
+      //make the background darker when hover
+      &:hover {
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          border-radius: 8px;
+        }
+      }
+
+      div {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        row-gap: 12px;
+
+        h2 {
+          font-size: 14px;
+          color: $success;
+          padding: 0 8px;
+          font-weight: 600;
+          border-left: 2px solid $success;
+        }
+        h1 {
+          font-size: 37px;
+          color: $secondary;
+          font-weight: 700;
+        }
+
+        button {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          background-color: $success;
+          color: $secondary;
+          padding: 12px 24px;
+          border: none;
+          border-radius: 4px;
+          column-gap: 12px;
+
+          img {
+            width: 24px;
+            height: 24px;
+          }
+          p {
+            margin: 0;
+          }
+        }
+      }
+    }
+
+    @media only screen and (max-width: 965px) {
+      padding: 24px $screen-x-gap-mobile;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media only screen and (max-width: 625px) {
+      padding: 24px $screen-x-gap-mobile;
+      grid-template-columns: repeat(1, 1fr);
+      justify-items: center;
+      .pet_list_item {
+        max-width: 424px;
+      }
+    }
+  }
+}

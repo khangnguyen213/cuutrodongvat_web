@@ -1,0 +1,139 @@
+.ant-modal {
+  top: 10px;
+
+  @include phone-screen {
+    top: 0;
+  }
+}
+
+.ant-modal .ant-modal-content {
+  padding: 0;
+}
+
+.pet-detail-page-header {
+  h1 {
+    font-size: 37px;
+    font-weight: 700;
+    color: #fff;
+  }
+}
+
+.pet-detail-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px $screen-x-gap-desktop;
+
+  @include phone-screen {
+    padding: 20px $screen-x-gap-mobile;
+  }
+
+  .pet-detail-page-content {
+    display: grid;
+    grid-template-columns: 5fr 6fr;
+    grid-gap: 40px;
+    width: 100%;
+    max-width: 1200px;
+
+    @include phone-screen {
+      grid-template-columns: 1fr;
+      grid-gap: 20px;
+    }
+
+    .pet-detail-page-content-left {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+      overflow: hidden;
+
+      @include phone-screen {
+        width: 100%;
+        height: 300px;
+      }
+
+      img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, 0);
+        border-radius: 8px;
+
+        @include phone-screen {
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+      }
+    }
+
+    .pet-detail-page-content-right {
+      h1 {
+        font-size: 36px;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 8px;
+      }
+
+      h2 {
+        position: relative;
+        font-size: 18px;
+        color: $primary;
+        margin-bottom: 8px;
+        padding-left: 14px;
+      }
+
+      .important {
+        color: $danger;
+      }
+
+      h2::before {
+        content: '';
+        position: absolute;
+        top: 9px;
+        left: 0;
+        display: block;
+        width: 7px;
+        height: 2px;
+        background-color: $success;
+      }
+
+      p {
+        font-size: 18px;
+        color: $primary;
+        margin-bottom: 8px;
+        text-align: justify;
+      }
+
+      button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 700;
+        color: $secondary;
+        background-color: $success;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: center;
+        column-gap: 10px;
+
+        p {
+          margin: 0;
+          color: $secondary;
+        }
+
+        &:hover {
+          background-color: $success-dark;
+        }
+      }
+    }
+  }
+}

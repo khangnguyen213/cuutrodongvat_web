@@ -1,0 +1,58 @@
+@import 'colors';
+@import 'distances';
+
+@mixin google-font($font-name) {
+  $font-name: str-replace($font-name, ' ', '+');
+  $font-name: unquote($font-name);
+  @import url('https://fonts.googleapis.com/css?family=#{$font-name}');
+}
+
+$font-name: 'Baloo 2';
+
+@mixin phone-screen {
+  @media only screen and (max-width: 767px) {
+    @content;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+// config scroll
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+//config scroll bar
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: darken($success, 0.5);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: darken($success-light, 0.5);
+}
+
+.no-scroll {
+  overflow: hidden;
+  padding-right: 8px;
+}
+
+.animation-open-modal {
+  @media (orientation: portrait) {
+    transform: scale(1);
+    opacity: 1;
+  }
+  @media (orientation: landscape) {
+    bottom: 0;
+  }
+}

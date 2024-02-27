@@ -1,0 +1,56 @@
+.cases-page {
+  padding: 20px $screen-x-gap-desktop;
+
+  @include phone-screen {
+    padding: 20px $screen-x-gap-mobile;
+  }
+
+  .table_icon {
+    mix-blend-mode: multiply;
+    filter: contrast(1);
+  }
+
+  .table_desktop {
+    display: block;
+
+    @include phone-screen {
+      display: none;
+    }
+  }
+
+  .table_mobile {
+    display: none;
+
+    @include phone-screen {
+      display: block;
+    }
+  }
+}
+
+.adopt_questions {
+  padding: 20px $screen-x-gap-desktop;
+
+  @include phone-screen {
+    padding: 20px $screen-x-gap-mobile;
+  }
+
+  .adopt_question {
+    margin-bottom: 20px;
+
+    .question {
+      &::before {
+        content: 'Q: ';
+        font-weight: bold;
+        color: $success;
+      }
+    }
+
+    .answer {
+      &::before {
+        content: 'A: ';
+        font-weight: bold;
+        color: $success;
+      }
+    }
+  }
+}

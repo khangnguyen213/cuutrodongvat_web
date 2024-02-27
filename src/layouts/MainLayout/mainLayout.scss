@@ -1,0 +1,31 @@
+@import 'bootstrap/scss/bootstrap.scss';
+
+@include google-font($font-name);
+
+.main_layout {
+  width: 100%;
+  margin-top: $headerH-desktop;
+  min-height: 100vh;
+  font-family: $font-name, cursive;
+  @include phone-screen() {
+    font-size: 14px;
+    margin-top: $headerH-mobile;
+  }
+
+  header {
+    height: $headerH-desktop;
+    position: fixed;
+    top: 0;
+    z-index: 100;
+
+    @include phone-screen() {
+      height: $headerH-mobile;
+    }
+  }
+  .main_layout_body {
+    min-height: calc(100vh - ($headerH-desktop));
+    @include phone-screen() {
+      min-height: calc(100vh - ($headerH-mobile));
+    }
+  }
+}
