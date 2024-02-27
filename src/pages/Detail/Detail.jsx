@@ -14,6 +14,7 @@ import cat_waiting from '@/assets/cat-waiting.jpg';
 import { parseLineBreak } from '@/utils/parseLineBreak';
 import './Detail.scss';
 import AdoptForm from './AdoptForm';
+import { FacebookComment } from '../../components/FacebookComments';
 
 export default function Detail() {
   console.log('Render Detail');
@@ -197,12 +198,7 @@ export default function Detail() {
                   <p>LIÊN HỆ NHẬN NUÔI</p>
                   <img src={paw} width="24" />
                 </button>
-                <div
-                  class="fb-comments"
-                  data-href={`https://cuutrodongvat-web.vercel.app/tim-mai-am/thong-tin/${petId}`}
-                  data-width=""
-                  data-numposts="5"
-                ></div>
+                <FacebookComment link={window.location.href} />
               </div>
             </div>
           </div>
