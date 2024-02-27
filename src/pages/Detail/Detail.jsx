@@ -197,15 +197,15 @@ export default function Detail() {
                   <p>LIÊN HỆ NHẬN NUÔI</p>
                   <img src={paw} width="24" />
                 </button>
+                <div
+                  class="fb-comments"
+                  data-href={`https://cuutrodongvat-web.vercel.app/tim-mai-am/thong-tin/${petId}`}
+                  data-width=""
+                  data-numposts="5"
+                ></div>
               </div>
             </div>
           </div>
-          <div
-            class="fb-comments"
-            data-href={`https://cuutrodongvat-web.vercel.app/tim-mai-am/thong-tin/${petId}`}
-            data-width=""
-            data-numposts="5"
-          ></div>
         </>
       )}
       {!pet && <h1>Không tìm thấy thú cưng</h1>}
