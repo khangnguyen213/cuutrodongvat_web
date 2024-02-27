@@ -200,6 +200,12 @@ export default function Detail() {
               </div>
             </div>
           </div>
+          <div
+            class="fb-comments"
+            data-href={`https://cuutrodongvat-web.vercel.app/tim-mai-am/thong-tin/${pet.id}`}
+            data-width=""
+            data-numposts="5"
+          ></div>
         </>
       )}
       {!pet && <h1>Không tìm thấy thú cưng</h1>}
