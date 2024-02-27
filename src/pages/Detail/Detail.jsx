@@ -202,7 +202,7 @@ export default function Detail() {
           </div>
           <div
             class="fb-comments"
-            data-href={`https://cuutrodongvat-web.vercel.app/tim-mai-am/thong-tin/${pet.id}`}
+            data-href={`https://cuutrodongvat-web.vercel.app/tim-mai-am/thong-tin/${petId}`}
             data-width=""
             data-numposts="5"
           ></div>
