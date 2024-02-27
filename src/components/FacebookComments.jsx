@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
+
 export function FacebookComment({ link }) {
-  React.useEffect(() => {
+  useEffect(() => {
     if (window.FB) {
       window.FB.XFBML.parse();
     }
