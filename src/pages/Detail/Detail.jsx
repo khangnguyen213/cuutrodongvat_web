@@ -4,6 +4,7 @@ import paw from '@assets/paw-white.png';
 import { useSelector } from 'react-redux';
 import { Modal, Avatar, Card, notification } from 'antd';
 import { copyContent } from '@/utils/copyContent';
+import { Global } from '../../global';
 import {
   FacebookOutlined,
   WhatsAppOutlined,
@@ -198,7 +199,9 @@ export default function Detail() {
                   <p>LIÊN HỆ NHẬN NUÔI</p>
                   <img src={paw} width="24" />
                 </button>
-                <FacebookComment link={window.location.href} />
+                <FacebookComment
+                  link={`${Global.CLIENT_URL}/tim-mai-am/thong-tin/${pet.id}`}
+                />
               </div>
             </div>
           </div>
