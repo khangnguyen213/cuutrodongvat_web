@@ -1,7 +1,35 @@
 @import 'bootstrap/scss/bootstrap.scss';
 
 .tim_mai_am {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  .searchBox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    width: 100%;
+
+    input {
+      width: 60%;
+      height: 50px;
+      border-radius: 10px;
+      border: 1px solid #ced4da;
+      padding: 10px;
+      font-size: 20px;
+      background-color: transparent;
+      color: white;
+
+      &:focus {
+        outline: none;
+      }
+
+      &::placeholder {
+        color: white;
+      }
+
+      @include phone-screen {
+        width: 80%;
+      }
+    }
+  }
 }

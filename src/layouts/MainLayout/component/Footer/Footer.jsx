@@ -36,11 +36,11 @@ const Footer = () => {
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15337.67084149786!2d108.22470869888062!3d16.04379953311636!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3142170596069b11%3A0xe76fc081cb35e5cd!2sPAWS%20International%20Clinic%20Da%20Nang!5e0!3m2!1svi!2s!4v1709176865506!5m2!1svi!2s"
           style={{ border: 0 }}
-          allowfullscreen=""
+          allowFullScreen=""
           loading="lazy"
           width="100%"
           height="100%"
-          referrerpolicy="no-referrer-when-downgrade"
+          referrerPolicy="no-referrer-when-downgrade"
         ></iframe>
       </div>
 
