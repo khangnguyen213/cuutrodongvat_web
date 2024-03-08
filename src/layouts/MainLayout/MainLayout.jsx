@@ -10,12 +10,12 @@ export default function MainLayout() {
   const { status } = useModalContext();
   return (
     <div className="main_layout">
-      <Header></Header>
+      <Header />
       <div className="main_layout_body">
         {status === 'IN_PROGRESS' && <Spin spinning={true} fullscreen />}
-        <Outlet></Outlet>
+        <Outlet />
       </div>
-      <Footer></Footer>
+      <Footer />
     </div>
   );
 }

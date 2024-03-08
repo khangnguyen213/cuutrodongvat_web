@@ -1,7 +1,8 @@
 import { lazy, Suspense } from 'react';
 import { Spin } from 'antd';
+import PermissionDenied from '../components/PermissionDenied/PermissionDenied';
 
-const LazyLoad = (importFunc) => {
+const LazyLoad = (importFunc, access = true, url) => {
   // const LazyComponent = lazy(() => {
   //   return new Promise((resolve) => {
   //     setTimeout(() => {
@@ -9,7 +10,11 @@ const LazyLoad = (importFunc) => {
   //     }, 1000);
   //   });
   // });
-  const LazyComponent = lazy(importFunc);
+
+  if (!access) {
+    return <PermissionDenied url={url}></PermissionDenied>;
+  }
+  const LazyComponent = lazy(() => importFunc());
 
   return (
     <Suspense fallback={<Spin spinning={true} fullscreen />}>

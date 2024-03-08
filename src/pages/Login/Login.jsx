@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import donationImage from '@/assets/donation.jpg';
 import { router } from '@/routes';
-import { login } from '@/services/fosters/fostersService';
+import { fosterApi } from '../../services/fosters/fostersApi';
 import { firebase_login_gmail } from './firebase_login_gmail';
 import { BiLogoGmail } from 'react-icons/bi';
-import { Button } from 'antd';
+import { Button, notification } from 'antd';
 
 import './Login.scss';
 import { useSelector } from 'react-redux';
@@ -20,8 +20,15 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => {
-    login(data.email, data.password);
+  const onSubmit = async (data) => {
+    const res = await fosterApi.login(data.email, data.password);
+    if (res.status === 200) {
+      notification.success({ message: 'Đăng nhập thành công' });
+      localStorage.setItem('token', res.data);
+      window.location.href = '/quan-ly/cac-truong-hop';
+    } else {
+      notification.error({ message: res.message });
+    }
   };
 
   useEffect(() => {

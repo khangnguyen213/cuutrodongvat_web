@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './TimMaiAm.scss';
 import PetList from '@components/PetList/PetList';
-import { useSelector } from 'react-redux';
 import dog_waiting from '@/assets/dog-waiting.jpg';
 import cat_waiting from '@/assets/cat-waiting.jpg';
 import { FaSearch } from 'react-icons/fa';
+import { useSearchParams } from 'react-router-dom';
+import { getPets } from '../../services/pets/petsApi';
+import { Pagination } from 'antd';
 
 function toNonAccentVietnamese(str) {
   str = str.replace(/A|Á|À|Ã|Ạ|Â|Ấ|Ầ|Ẫ|Ậ|Ă|Ắ|Ằ|Ẵ|Ặ/g, 'A');
@@ -29,28 +31,61 @@ function toNonAccentVietnamese(str) {
 
 export default function TimMaiAm({ type }) {
   console.log('Render TimMaiAm');
-  const [search, setSearch] = useState('');
+  let initalPage = 1;
+  let initalPerPage = 4;
+  let [searchParams, setSearchParams] = useSearchParams();
+  let page = searchParams.get('page');
+  let perPage = searchParams.get('perPage');
+  let keyword = searchParams.get('keyword');
+  const [totalPets, setTotalPets] = useState(0);
 
-  const pets = useSelector((state) => state.pets);
-  const petsByType = type ? pets.filter((pet) => pet.type === type) : pets;
-  const petBySearch = petsByType.filter((pet) =>
-    toNonAccentVietnamese(pet.name).includes(toNonAccentVietnamese(search))
-  );
+  const searchRef = useRef();
+  const [petsData, setPetsData] = useState([]);
 
-  const searchChange = (e) => {
-    setSearch(e.target.value);
+  const searchClick = (e) => {
+    e.preventDefault();
+    setSearchParams((prev) => {
+      let search = searchRef.current.value;
+      let newParams = new URLSearchParams(prev);
+      newParams.set('keyword', search);
+      newParams.set('page', 1);
+      return newParams;
+    });
   };
 
-  console.log(toNonAccentVietnamese(search));
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getPets({
+        page: page || initalPage,
+        perPage: perPage || initalPerPage,
+        keyword: keyword,
+        type: type,
+      });
+      setPetsData(data);
+    };
+    const fetchTotalPets = async () => {
+      const data = await getPets({
+        page: 1,
+        keyword: keyword,
+        type: type,
+      });
+      setTotalPets(data.length);
+    };
+
+    fetchData();
+    fetchTotalPets();
+
+    window.scrollTo(0, 0);
+  }, [page, perPage, keyword, type]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = 'Tìm mái ấm';
   }, []);
 
-  useEffect(() => {
-    setSearch('');
-  }, [type]);
+  // useEffect(() => {
+  //   setSearch('');
+  // }, [type]);
 
   return (
     <>
@@ -86,18 +121,44 @@ export default function TimMaiAm({ type }) {
               : 'Tìm mái ấm'}
           </h1>
           <div className="searchBox">
-            <input
-              id="searchInput"
-              type="text"
-              placeholder="Tìm kiếm"
-              value={search}
-              onChange={searchChange}
-            />
+            <form onSubmit={searchClick}>
+              <input
+                id="searchInput"
+                type="text"
+                placeholder="Tìm kiếm"
+                ref={searchRef}
+              />
+            </form>
+            <FaSearch onClick={searchClick} className="search-icon" />
           </div>
         </div>
       </div>
       <div className="tim_mai_am">
-        <PetList petListData={petBySearch} includeFirstItem={false} />
+        <PetList petListData={petsData} includeFirstItem={false} />
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: '20px',
+          marginBottom: '20px',
+        }}
+      >
+        <Pagination
+          current={parseInt(page) || initalPage}
+          total={totalPets}
+          showSizeChanger
+          pageSize={parseInt(perPage) || initalPerPage}
+          pageSizeOptions={['4', '10', '20']}
+          onChange={(page, pageSize) => {
+            setSearchParams((prev) => {
+              let newParams = new URLSearchParams(prev);
+              newParams.set('page', page);
+              newParams.set('perPage', pageSize);
+              return newParams;
+            });
+          }}
+        />
       </div>
     </>
   );

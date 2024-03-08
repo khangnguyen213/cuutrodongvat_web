@@ -2,8 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { sleep } from '@/utils/sleep';
 import useArray from '@/hooks/useArray';
-import { Space, Alert, Button } from 'antd';
+import { Space, Alert, Button, notification } from 'antd';
 import { PlusOutlined, CloseOutlined } from '@ant-design/icons';
+import { generatePetId } from '@/utils/generateId';
 
 import './PetCreateModal.scss';
 
@@ -11,24 +12,20 @@ import { useModalContext } from '@/contexts/modalContext';
 
 import BoxModal from '@/components/BoxModal';
 import { imagesToFirebaseUrls } from '@/utils/imagesToFirebaseUrl';
-import { addPet } from '@/services/pets/petsService';
-import { router } from '@/routes';
+
+import petsApi from '../services/pets/petsApi';
+import { useSelector } from 'react-redux';
 
 const PetModal = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const { closeModal } = useModalContext();
-  const navigate = router.navigate;
+  const { closeModal, payload } = useModalContext();
   const modal_ref = useRef(null);
   const DURATION = 200;
+  const sessionStore = useSelector((state) => state.session);
 
-  const { array: questions, push, filter, update, remove } = useArray([]);
+  const { array: questions, push, filter } = useArray([]);
 
-  let foster;
-  if (localStorage.getItem('token')) {
-    foster = JSON.parse(localStorage.getItem('token'));
-  } else {
-    navigate('/');
-  }
+  const foster = sessionStore.data;
 
   const {
     register,
@@ -40,6 +37,26 @@ const PetModal = () => {
       gender: 0,
     },
   });
+
+  const addPet = async (petData) => {
+    const newPet = {
+      id: generatePetId(petData),
+      ...petData,
+    };
+    try {
+      await petsApi.addPet(newPet);
+      notification.success({
+        message: 'Thêm thông tin thành công',
+      });
+      return newPet;
+    } catch (error) {
+      console.log('addPet error: ', error);
+      notification.error({
+        message: 'Thêm thông tin thất bại',
+      });
+    }
+  };
+
   const onSubmit = async (data) => {
     setIsLoading(true);
     imagesToFirebaseUrls(data.image, '')
@@ -53,11 +70,13 @@ const PetModal = () => {
           image: urls[0],
           questions,
         };
-        await addPet(pet);
+        const res = await addPet(pet);
         setIsLoading(false);
+        payload.setPetsData((prev) => [res, ...prev]);
         closeModal();
       })
       .catch((err) => {
+        console.log(err);
         setIsLoading(false);
         closeModal();
       });
@@ -73,12 +92,6 @@ const PetModal = () => {
       modal_ref.current.classList?.add('animation-open-modal');
     });
   }, []);
-
-  //   useEffect(() => {
-  //     if (loading === STATUS.SUCCESS) {
-  //       handleCloseModal();
-  //     }
-  //   }, [loading]);
 
   return (
     <BoxModal className="modal_backdrop">

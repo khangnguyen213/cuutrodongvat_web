@@ -1,21 +1,67 @@
-import React, { useEffect } from 'react';
-import { Button, Space, Table, ConfigProvider, Tag } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Space, Table, ConfigProvider, Tag, notification } from 'antd';
 import { useSelector } from 'react-redux';
-import { updateAdoptStatus } from '@/services/adopts/adoptsService';
 import './Adopts.scss';
+import { adoptsApi } from '../../services/adopts/adoptsApi';
+import { petsApi } from '../../services/pets/petsApi';
 
 export default function Adopts() {
   console.log('Render Adopts');
-  const token = JSON.parse(localStorage.getItem('token'));
-  const adoptsData = useSelector((state) => state.adopts);
+  const sessionStore = useSelector((state) => state.session);
+  const [adoptsData, setAdoptsData] = useState([]);
   const adopts = adoptsData
-    .filter((adopt) => adopt.fosterId == token.id)
+    .filter((adopt) => adopt.fosterId == sessionStore.data.id)
     .map((adopt) => {
       return { ...adopt, key: adopt.id };
     });
 
-  const changeAdoptStatus = (id, status) => {
-    updateAdoptStatus(id, status);
+  const changeAdoptStatus = async (adoptId, status) => {
+    try {
+      // status: 0 - Chờ xác nhận, 1 - Chấp thuận, 2 - Từ chối
+      if (!['0', '1', '2'].includes(status)) {
+        throw new Error('Invalid status');
+      }
+      const adopt = await adoptsApi.getAdoptById(adoptId);
+      const pet = await petsApi.getPetById(adopt.petId);
+
+      if (adopt.length === 0 || pet.length === 0) {
+        notification.error({ message: 'Lỗi' });
+        return;
+      }
+
+      if (status === '1') {
+        if (pet.adopted) {
+          notification.error({ message: 'Bé đã có người nhận nuôi' });
+          return;
+        }
+        const updateData = {
+          ...pet,
+          adopted: !pet.adopted,
+        };
+        await petsApi.updatePet(updateData);
+      }
+
+      if (status === '2' || status === '0') {
+        if (adopt.status === '1') {
+          const updateData = {
+            ...pet,
+            adopted: !pet.adopted,
+          };
+          await petsApi.updatePet(updateData);
+        }
+      }
+      await adoptsApi.updateAdopt({ ...adopt, status: status });
+      setAdoptsData(
+        adoptsData.map((adopt) =>
+          adopt.id === adoptId ? { ...adopt, status: status } : adopt
+        )
+      );
+
+      notification.success({ message: 'Thay đổi trạng thái thành công' });
+    } catch (error) {
+      console.log('updateAdoptStatus error: ', error);
+      notification.error({ message: 'Thay đổi trạng thái thất bại' });
+    }
   };
 
   const columns_desktop = [
@@ -217,6 +263,11 @@ export default function Adopts() {
   useEffect(() => {
     document.title = 'Quản lý';
     window.scrollTo(0, 0);
+    const fetchData = async () => {
+      const data = await adoptsApi.getAdopts();
+      setAdoptsData(data);
+    };
+    fetchData();
   }, []);
 
   return (

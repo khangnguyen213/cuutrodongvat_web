@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { sleep } from '@/utils/sleep';
 
@@ -8,41 +8,22 @@ import { useModalContext } from '@/contexts/modalContext';
 
 import BoxModal from '@/components/BoxModal';
 import { imagesToFirebaseUrls } from '@/utils/imagesToFirebaseUrl';
-import { useDispatch, useSelector } from 'react-redux';
-import { updatePet } from '@/services/pets/petsService';
-import { router } from '@/routes';
+import { petsApi } from '../services/pets/petsApi';
 
 import useArray from '@/hooks/useArray';
-import { Space, Alert } from 'antd';
+import { Space, Alert, notification, Spin } from 'antd';
 import { PlusOutlined, CloseOutlined } from '@ant-design/icons';
 
 const PetModal = () => {
-  //   const { openModal, payload, setStatus } = useModalContext();
-  const { openModal, closeModal, setStatus, payload } = useModalContext();
-  const pet = useSelector((state) =>
-    state.pets.find((pet) => pet.id == payload.update_pet_id)
-  );
-  const dispatch = useDispatch();
-  const navigate = router.navigate;
+  const { openModal, closeModal, payload } = useModalContext();
+
+  const pet = payload.petsData.find((pet) => pet.id === payload.update_pet_id);
+
   const modal_ref = useRef(null);
   const DURATION = 200;
-  //   const [loading, setLoading] = useState(STATUS.NOT_START);
-  //   const [payload, setPayload] = useState({});
+  const [loading, setLoading] = useState(false);
 
-  const {
-    array: questions,
-    push,
-    filter,
-    update,
-    remove,
-  } = useArray(pet.questions);
-
-  let foster;
-  if (localStorage.getItem('token')) {
-    foster = JSON.parse(localStorage.getItem('token'));
-  } else {
-    navigate('/');
-  }
+  const { array: questions, push, filter } = useArray(pet.questions);
 
   const {
     register,
@@ -61,9 +42,9 @@ const PetModal = () => {
       description: pet.description,
     },
   });
-  const onSubmit = (data) => {
-    console.log(data);
-    setStatus('IN_PROGRESS');
+
+  const onSubmit = async (data) => {
+    setLoading(true);
     let updateData;
 
     updateData = {
@@ -74,33 +55,45 @@ const PetModal = () => {
     };
 
     if (data.image.length > 0) {
-      imagesToFirebaseUrls(data.image, '').then((urls) => {
-        console.log(urls);
+      imagesToFirebaseUrls(data.image, '').then(async (urls) => {
         updateData = { ...updateData, image: urls[0] };
-        console.log(updateData);
-        updatePet(updateData);
-        if (localStorage.getItem('update_pet_error') === 'true') {
-          setStatus('FAIL');
-          closeModal();
+        try {
+          await petsApi.updatePet(updateData);
+          notification.success({
+            message: 'Cập nhật thông tin thành công',
+          });
+          payload.setPetsData(
+            payload.petsData.map((p) =>
+              p.id === updateData.id ? updateData : p
+            )
+          );
+        } catch (error) {
+          console.log('updatePet error: ', error);
+          notification.error({
+            message: 'Cập nhật thông tin thất bại',
+          });
         }
-        if (localStorage.getItem('update_pet_error') === 'false') {
-          setStatus('SUCCESS');
-          closeModal();
-        }
+        setLoading(false);
+        closeModal();
       });
     } else {
-      updatePet(updateData);
-      if (localStorage.getItem('update_pet_error') === 'true') {
-        setStatus('FAIL');
-        closeModal();
+      try {
+        await petsApi.updatePet(updateData);
+        notification.success({
+          message: 'Cập nhật thông tin thành công',
+        });
+        payload.setPetsData(
+          payload.petsData.map((p) => (p.id === updateData.id ? updateData : p))
+        );
+      } catch (error) {
+        console.log('updatePet error: ', error);
+        notification.error({
+          message: 'Cập nhật thông tin thất bại',
+        });
       }
-      if (localStorage.getItem('update_pet_error') === 'false') {
-        setStatus('SUCCESS');
-        closeModal();
-      }
+      setLoading(false);
+      closeModal();
     }
-    //add foster fail will be signal by local storage 'add_foster_error' = 'true'
-    //else local storage 'add_foster_error' = 'false'
   };
 
   const handleCloseModal = () => {
@@ -114,14 +107,9 @@ const PetModal = () => {
     });
   }, []);
 
-  //   useEffect(() => {
-  //     if (loading === STATUS.SUCCESS) {
-  //       handleCloseModal();
-  //     }
-  //   }, [loading]);
-
   return (
     <BoxModal className="modal_backdrop">
+      <Spin spinning={loading} fullscreen />
       <div ref={modal_ref} className="form_pet">
         <h1>Cập nhật</h1>
         <button onClick={handleCloseModal} className="btn-close"></button>

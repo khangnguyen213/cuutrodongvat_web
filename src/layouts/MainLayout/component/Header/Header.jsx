@@ -5,15 +5,12 @@ import { MenuOutlined } from '@ant-design/icons';
 import { Menu, Avatar } from 'antd';
 import './Header.scss';
 import { router } from '@/routes';
-import { logout } from '@/services/fosters/fostersService';
 import { useSelector } from 'react-redux';
-import { useModalContext } from '@/contexts/modalContext';
 
 const Header = () => {
   console.log('Render Header');
   const navigate = router.navigate;
-  const user = useSelector((state) => state.session.user);
-  const { openModal } = useModalContext();
+  const sessionStore = useSelector((state) => state.session);
 
   const items = [
     { label: 'Về chúng tôi', key: 'about', disabled: false },
@@ -29,7 +26,7 @@ const Header = () => {
     {
       label: 'Quản lý',
       key: 'manage',
-      disabled: !user,
+      disabled: !sessionStore.data,
       children: [
         { label: 'Các trường hợp', key: 'cases' },
         { label: 'Đơn xin nhận nuôi', key: 'adopts' },
@@ -41,14 +38,17 @@ const Header = () => {
       disabled: false,
     },
     {
-      label: !user && 'Đăng nhập',
-      icon: user && (
-        <Avatar style={{ transform: 'translateY(4px)' }} src={user?.avatar} />
+      label: !sessionStore.data && 'Đăng nhập',
+      icon: sessionStore.data && (
+        <Avatar
+          style={{ transform: 'translateY(4px)' }}
+          src={sessionStore.data?.avatar}
+        />
       ),
       key: 'account',
       disabled: false,
-      children: user && [
-        { label: user?.name, key: 'infor' },
+      children: sessionStore.data && [
+        { label: sessionStore.data?.name, key: 'infor' },
         { label: 'Đăng xuất', key: 'logout' },
       ],
     },
@@ -80,15 +80,14 @@ const Header = () => {
         navigate('/tim-mai-am/meo-cho-di-chu');
         break;
       case 'register':
-        console.log(window.location);
-        if (window.location.pathname === '/quan-ly/cac-truong-hop') {
-          openModal('PET_CREATE_MODAL');
+        if (sessionStore.data) {
+          navigate('/quan-ly/cac-truong-hop');
         } else {
           navigate('/dang-ky');
         }
         break;
       case 'account':
-        if (!user) navigate('/dang-nhap');
+        if (!sessionStore.data) navigate('/dang-nhap');
         break;
       case 'cases':
         navigate('/quan-ly/cac-truong-hop');
@@ -97,8 +96,8 @@ const Header = () => {
         navigate('/quan-ly/don-xin-nhan-nuoi');
         break;
       case 'logout':
-        logout();
-        navigate('/');
+        localStorage.removeItem('token');
+        window.location.href = '/';
         break;
       default:
         break;

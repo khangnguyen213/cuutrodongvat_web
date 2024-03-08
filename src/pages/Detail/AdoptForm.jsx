@@ -1,7 +1,9 @@
 import { useForm } from 'react-hook-form';
 import './AdoptForm.scss';
-import { addAdopt } from '@/services/adopts/adoptsService';
+// import { addAdopt } from '@/services/adopts/adoptsService';
 import { notification } from 'antd';
+import { generateAdoptId } from '@/utils/generateId';
+import { adoptsApi } from '../../services/adopts/adoptsApi';
 
 export default function AdoptForm({ questions, petId, closeModal, fosterId }) {
   const {
@@ -10,24 +12,33 @@ export default function AdoptForm({ questions, petId, closeModal, fosterId }) {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    addAdopt({
-      petId,
-      fosterId,
-      name: data.name,
-      contact1: data.contact1,
-      contact2: data.contact2 || '',
-      questions: questions.map((question) => ({
-        id: question.id,
-        question: question.question,
-        answer: data[question.id],
-      })),
-    });
+  const onSubmit = async (data) => {
+    try {
+      const newAdopt = {
+        petId,
+        fosterId,
+        name: data.name,
+        contact1: data.contact1,
+        contact2: data.contact2 || '',
+        questions: questions.map((question) => ({
+          id: question.id,
+          question: question.question,
+          answer: data[question.id],
+        })),
+        status: '0',
+        id: generateAdoptId(),
+      };
+      await adoptsApi.addAdopt(newAdopt);
+      notification.success({
+        message: 'Gửi yêu cầu nhận nuôi thành công',
+        description: 'Chúng tôi sẽ liên hệ bạn sớm nhất có thể',
+      });
+    } catch (error) {
+      console.log('addAdopt error: ', error);
+      notification.error({ message: 'Gửi yêu cầu thất bại' });
+    }
+
     closeModal();
-    notification.success({
-      message: 'Gửi yêu cầu nhận nuôi thành công',
-      description: 'Chúng tôi sẽ liên hệ bạn sớm nhất có thể',
-    });
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="adopt_form">

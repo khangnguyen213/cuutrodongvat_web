@@ -1,38 +1,91 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Space, Table, ConfigProvider, Switch, Popconfirm } from 'antd';
+import {
+  Button,
+  Space,
+  Table,
+  ConfigProvider,
+  Switch,
+  Popconfirm,
+  notification,
+} from 'antd';
 import { useModalContext } from '@/contexts/modalContext';
 import { useSelector } from 'react-redux';
-import { deletePet, toggleAdopted } from '@/services/pets/petsService';
 import dogIcon from '@assets/dog-icon.jpg';
 import catIcon from '@assets/cat-icon.jpeg';
 import { parseLineBreak } from '@/utils/parseLineBreak';
 import './Cases.scss';
+import petsApi from '../../services/pets/petsApi';
 
 export default function Cases() {
   console.log('Render Cases');
   const [isLoading, setIsLoading] = useState(false);
-  const userSession = useSelector((state) => state.session.user);
-  const petsData = useSelector((state) => state.pets);
-  const pets = petsData
-    .filter((pet) => pet.fosterId == userSession.id)
-    .map((pet) => {
-      return { ...pet, key: pet.id };
-    });
-  const { openModal, closeModal, setStatus, setPayload } = useModalContext();
+  const sessionStore = useSelector((state) => state.session);
+  const [petsData, setPetsData] = useState([]);
+
+  const { openModal, setPayload } = useModalContext();
 
   const deletePetClick = async (id) => {
-    setIsLoading(true);
-    await deletePet(id);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      await petsApi.deletePet(id);
+      setPetsData((prevState) => prevState.filter((pet) => pet.id !== id));
+      setIsLoading(false);
+      notification.success({
+        message: 'Xóa thông tin thành công',
+      });
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+      notification.error({
+        message: 'Xóa thông tin thất bại',
+      });
+    }
   };
 
   const editPetClick = (id) => {
-    setPayload((prevState) => ({ ...prevState, update_pet_id: id }));
+    setPayload((prevState) => ({
+      ...prevState,
+      update_pet_id: id,
+      petsData,
+      setPetsData,
+    }));
     openModal('PET_EDIT_MODAL');
   };
 
   const addPet = () => {
+    setPayload((prevState) => ({
+      ...prevState,
+      petsData,
+      setPetsData,
+    }));
     openModal('PET_CREATE_MODAL');
+  };
+
+  const toggleAdopted = async (id) => {
+    try {
+      const petData = petsData.find((pet) => pet.id === id);
+      const updateData = {
+        ...petData,
+        adopted: !petData.adopted,
+      };
+      await petsApi.updatePet(updateData);
+      setPetsData((prevState) =>
+        prevState.map((pet) => {
+          if (pet.id === id) {
+            return { ...pet, adopted: !pet.adopted };
+          }
+          return pet;
+        })
+      );
+      notification.success({
+        message: 'Cập nhật thông tin thành công',
+      });
+    } catch (error) {
+      console.log('toggleAdopted error: ', error);
+      notification.error({
+        message: 'Cập nhật thông tin thất bại',
+      });
+    }
   };
 
   const columns_desktop = [
@@ -137,7 +190,7 @@ export default function Cases() {
           <Switch
             checkedChildren="Rồi"
             unCheckedChildren="Chưa"
-            defaultChecked={record.adopted}
+            checked={record.adopted}
             onChange={(checked) => {
               toggleAdopted(record.id);
             }}
@@ -263,7 +316,7 @@ export default function Cases() {
           <Switch
             checkedChildren="Rồi"
             unCheckedChildren="Chưa"
-            defaultChecked={record.adopted}
+            checked={record.adopted}
             onChange={(checked) => {
               toggleAdopted(record.id);
             }}
@@ -313,7 +366,15 @@ export default function Cases() {
   useEffect(() => {
     document.title = 'Quản lý';
     window.scrollTo(0, 0);
-  }, []);
+
+    const fetchData = async () => {
+      setIsLoading(true);
+      const data = await petsApi.getPets({ fosterId: sessionStore.data.id });
+      setPetsData(data);
+      setIsLoading(false);
+    };
+    fetchData();
+  }, [sessionStore.data]);
 
   return (
     <div className="cases-page">
@@ -364,11 +425,12 @@ export default function Cases() {
 
         <div className="table_desktop">
           <Table
-            dataSource={pets}
+            dataSource={petsData}
             columns={columns_desktop}
             pagination={{ pageSize: 5 }}
             bordered
             size="middle"
+            rowKey={(record) => record.id}
             expandable={{
               expandedRowRender: (record) => (
                 <div
@@ -389,10 +451,11 @@ export default function Cases() {
         </div>
         <div className="table_mobile">
           <Table
-            dataSource={pets}
+            dataSource={petsData}
             columns={columns_mobile}
             bordered
             size="small"
+            rowKey={(record) => record.id}
             expandable={{
               expandedRowRender: (record) => (
                 <div

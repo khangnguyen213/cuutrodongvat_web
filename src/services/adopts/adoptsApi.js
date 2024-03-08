@@ -18,4 +18,14 @@ const updateAdopt = async (adopt) => {
   return response.data;
 };
 
+export const adoptsApi = {
+  getAdopts,
+  addAdopt,
+  updateAdopt,
+  getAdoptById: async (id) => {
+    let response = await axios.get(`${baseURL}/${id}`);
+    return response.data;
+  },
+};
+
 export { getAdopts, addAdopt, updateAdopt };

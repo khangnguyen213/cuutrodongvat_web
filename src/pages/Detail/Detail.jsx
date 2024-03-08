@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import paw from '@assets/paw-white.png';
-import { useSelector } from 'react-redux';
 import { Modal, Avatar, Card, notification } from 'antd';
 import { copyContent } from '@/utils/copyContent';
 import { Global } from '../../global';
@@ -16,21 +15,26 @@ import { parseLineBreak } from '@/utils/parseLineBreak';
 import './Detail.scss';
 import AdoptForm from './AdoptForm';
 import { FacebookComment } from '../../components/FacebookComments';
+import { petsApi } from '../../services/pets/petsApi';
+import { fosterApi } from '../../services/fosters/fostersApi';
 
 export default function Detail() {
   console.log('Render Detail');
   const { petId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const pets = useSelector((state) => state.pets);
-  const fosters = useSelector((state) => state.fosters);
-  const pet = pets.find((pet) => pet.id === petId);
-  const foster = fosters.find((foster) => foster.id === pet.fosterId);
+  const [pet, setPet] = useState(null);
+  const [foster, setFoster] = useState(null);
 
   const { Meta } = Card;
-
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = pet?.name || 'Chi tiết';
+    petsApi.getPetById(petId.split('&i.')[1]).then((pet) => {
+      setPet(pet);
+      fosterApi.getFosterById(pet.fosterId).then((foster) => {
+        setFoster(foster);
+      });
+    });
   }, []);
 
   return (

@@ -1,5 +1,5 @@
 export class Global {
-  static API_URL = 'http://localhost:3000';
-  static secret = 'secret';
-  static CLIENT_URL = 'https://cuutrodongvat-web.vercel.app';
+  static API_URL = import.meta.env.VITE_API_URL;
+  static secret = import.meta.env.VITE_JWT_KEY;
+  static CLIENT_URL = import.meta.env.VITE_CLIENT_URL;
 }

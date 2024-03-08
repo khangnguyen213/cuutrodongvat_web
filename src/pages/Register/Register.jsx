@@ -4,12 +4,13 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import donationImage from '@/assets/donation.jpg';
 import { router } from '@/routes';
-import { addFoster } from '@/services/fosters/fostersService';
 import { imagesToFirebaseUrls } from '@/utils/imagesToFirebaseUrl';
 import { useModalContext } from '@/contexts/modalContext';
+import { fosterApi } from '../../services/fosters/fostersApi';
 
 import './Register.scss';
 import { useSelector } from 'react-redux';
+import { notification } from 'antd';
 
 export default function Register() {
   console.log('Render Register');
@@ -27,10 +28,14 @@ export default function Register() {
     imagesToFirebaseUrls(data.avatar, '').then(async (urls) => {
       const foster = { ...data, avatar: urls[0] };
       console.log('imageLoaded', foster);
-      await addFoster(foster);
+      const result = await fosterApi.register(foster);
       openModal('NONE');
-      if (localStorage.getItem('add_foster_error') === 'false')
+      if (result.status === 200) {
+        notification.success({ message: 'Đăng ký thành công' });
         navigate('/dang-nhap');
+      } else {
+        notification.error({ message: result.message });
+      }
     });
   };
 

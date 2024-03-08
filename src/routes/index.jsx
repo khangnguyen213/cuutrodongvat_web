@@ -5,14 +5,8 @@ import {
   Route,
 } from 'react-router-dom';
 import MainLayout from '@layouts/MainLayout/MainLayout';
-import Home from '@pages/Home/Home';
-import Detail from '@pages/Detail/Detail';
 import TimMaiAm from '@pages/TimMaiAm/TimMaiAm';
-import Register from '@pages/Register/Register';
-import Login from '@pages/Login/Login';
 import AdminLayout from '../layouts/AdminLayout/AdminLayout';
-import Cases from '../pages/Cases/Cases';
-import Adopts from '../pages/Adopts/Adopts';
 import LazyLoad from '../utils/lazy';
 
 console.log('routes/index.jsx');
@@ -34,11 +28,19 @@ const router = createBrowserRouter(
       </Route>
       <Route
         path="dang-ky"
-        element={LazyLoad(() => import('@pages/Register/Register'))}
+        element={LazyLoad(
+          () => import('@pages/Register/Register'),
+          localStorage.getItem('token') ? false : true,
+          '/'
+        )}
       />
       <Route
         path="dang-nhap"
-        element={LazyLoad(() => import('@pages/Login/Login'))}
+        element={LazyLoad(
+          () => import('@pages/Login/Login'),
+          localStorage.getItem('token') ? false : true,
+          '/'
+        )}
       />
       <Route path="quan-ly" element={<AdminLayout />}>
         <Route
