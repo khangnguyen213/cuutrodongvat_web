@@ -81,8 +81,21 @@ export default function Adopts() {
     },
     {
       title: 'Mã của bé',
-      dataIndex: 'petId',
+      // dataIndex: 'petId',
       key: 'petId',
+      render: (_, record) => (
+        <a
+          href={`${import.meta.env.VITE_CLIENT_URL}/tim-mai-am/thong-tin/${
+            record.petName
+          }&i.${record.petId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Space direction="vertical">
+            <div>{record.petId}</div>
+          </Space>
+        </a>
+      ),
     },
     {
       title: 'Liên hệ',

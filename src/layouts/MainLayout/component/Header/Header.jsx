@@ -54,14 +54,14 @@ const Header = () => {
     },
   ];
 
-  const itemsDesktop = items;
+  const itemsDesktop = items.filter((item) => !item.disabled);
 
   const itemsMobile = [
     {
       label: 'Danh mục',
       key: 'sub1',
       icon: <MenuOutlined />,
-      children: items,
+      children: items.filter((item) => !item.disabled),
     },
   ];
 
